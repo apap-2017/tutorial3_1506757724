@@ -1,9 +1,11 @@
 package com.example.tutorial3.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,11 +37,16 @@ public class StudentController {
 		return "view";
 	}
 	
-	@RequestMapping("/student/view/{npm}")
-	public String view2(Model model, @RequestParam(value = "npm", required = true) String npm) {
-		StudentModel student = studentService.selectStudent(npm);
-		model.addAttribute("student", student);
-		return "view";
+	@RequestMapping(value = {"/student/view", "student/view/{npm}"})
+	public String viewPath(@PathVariable Optional<String> npm, Model model) {
+		if(npm.isPresent()) {
+			StudentModel student = studentService.select(npm);
+			model.addAttribute("student", student);
+			return "view";
+		}else {
+			model.addAttribute("npm", npm.get());
+			return "viewGagal";
+		}
 	}
 	
 	@RequestMapping("/student/viewall")
@@ -47,5 +54,12 @@ public class StudentController {
 		List<StudentModel> students = studentService.selectAllStudents();
 		model.addAttribute("students", students);
 		return "viewall";
+	}
+	
+	@RequestMapping("/student/delete/{npm}")
+	public String delete(@RequestParam(value = "npm", required = true) String npm) {
+		StudentModel student = studentService.selectStudent(npm);
+		studentService.deleteStudent(student);
+		return "delete";
 	}
 }

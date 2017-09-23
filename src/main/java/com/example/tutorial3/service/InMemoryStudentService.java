@@ -2,6 +2,7 @@ package com.example.tutorial3.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.tutorial3.model.StudentModel;
 
@@ -10,6 +11,20 @@ public class InMemoryStudentService implements StudentService {
 	
 	@Override
 	public StudentModel selectStudent(String npm) {
+		// TODO Auto-generated method stub
+		// Implement
+		StudentModel student = null;
+		for(int ii = 0; ii < studentList.size(); ii++) {
+			if(studentList.get(ii).getNpm().equals(npm)) {
+				student = studentList.get(ii);
+				break;
+			}
+		}
+		return student;
+	}
+	
+	@Override
+	public StudentModel select(Optional<String> npm) {
 		// TODO Auto-generated method stub
 		// Implement
 		StudentModel student = null;
@@ -32,6 +47,11 @@ public class InMemoryStudentService implements StudentService {
 	public void addStudent(StudentModel student) {
 		// TODO Auto-generated method stub
 		studentList.add(student);
+	}
+	
+	@Override
+	public void deleteStudent(StudentModel student) {
+		studentList.remove(student);
 	}
 	
 }
